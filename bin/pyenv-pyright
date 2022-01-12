@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+#
+# Summary: Create a pyrightconfig.json file for a given virtualenv
+#
+# Usage: pyenv pyright [OPTIONS] [venv]
+#
+#   -o file        Output file [default: pyrightconfig.json]
+#
+#   venv           If provided, use the specified venv instead of the current one
+
+OUTPUT_FILE='pyrightconfig.json'
+
+while getopts "o:" arg; do
+    case $arg in
+        o)
+            if [ "$OPTARG" == '-' ] ; then
+                OUTPUT_FILE=/dev/stdout
+            else
+                OUTPUT_FILE="$OPTARG"
+            fi
+            ;;
+        *)
+            echo "Invalid option: $arg"
+            exit 1
+        esac
+done
+
+shift $((OPTIND-1))
+
+VENV=$1
+shift
+
+if [ "$#" -ne 0 ]; then
+    echo Several venvs passed; can not continue
+    exit 1
+fi
+
+# ---
+
+eval "$(pyenv init -)"
+
+if [ -n "$VENV" ]; then
+    pyenv shell $VENV
+fi
+
+python << EOF
+import sys, json, os, pathlib
+
+config_file = "$OUTPUT_FILE"
+config = {}
+
+if os.path.isfile(config_file):
+    with open(config_file, 'r') as fh:
+         try:
+             config = json.load(fh)
+         except Exception as e:
+             print('Could lot load config file:', e)
+             sys.exit(1)
+
+pythonPath = str(pathlib.Path(sys.executable).resolve().absolute())
+extraPaths = [p for p in sys.path if len(p)]
+
+# adjust python path
+if 'python' not in config:
+    config['python'] = {}
+
+config['python']['pythonPath'] = pythonPath
+
+# adjust extraPaths
+
+config['extraPaths'] = extraPaths
+
+with open(config_file, 'w') as fh:
+    json.dump(config, fh, indent=4)
+
+EOF
