@@ -20,7 +20,7 @@ git clone https://github.com/kassick/pyenv-pyright.git $(pyenv root)/plugins/pye
 
 - `pyenv pyright`: creates or updates `pyrightconfig.json` using the current python executable.
 
-- `pyenv pyright some_venv_or_version`: updates or creates the `pyrightconfig.json` using the python version specified by `some_env`.
+- `pyenv pyright some_venv_or_version`: updates or creates the `pyrightconfig.json` using the python version specified by `some_venv_or_version`.
 
 - `pyenv pyright -o some_file`: updates or creates `some_file` instead of `pyrightconfig.json`. A value of `-` prints the contents to `stdout`.
 
