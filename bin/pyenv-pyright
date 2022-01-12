@@ -2,11 +2,11 @@
 #
 # Summary: Create a pyrightconfig.json file for a given virtualenv
 #
-# Usage: pyenv pyright [OPTIONS] [venv]
+# Usage: pyenv pyright [OPTIONS] [version]
 #
 #   -o file        Output file [default: pyrightconfig.json]
 #
-#   venv           If provided, use the specified venv instead of the current one
+#   version        The pyenv's python version or virtualenv to be used
 
 OUTPUT_FILE='pyrightconfig.json'
 
